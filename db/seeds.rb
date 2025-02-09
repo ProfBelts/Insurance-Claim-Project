@@ -7,3 +7,5 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+p = Policy.create!(name: "Auto Insurance", description: "Covers vehicle damages.")
+puts p.policy_number # This should now have a value

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  claimable: one
+  claimable_type: Claimable
+  status: 1
+
+two:
+  user: two
+  claimable: two
+  claimable_type: Claimable
+  status: 1
