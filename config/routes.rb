@@ -8,8 +8,12 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
+  
+  resources :claims, only: [:create]
+  
   get "/claim", to: "pages#claim"
 
+  get "/policies/by_type", to: "policies#by_type"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

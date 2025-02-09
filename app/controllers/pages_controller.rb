@@ -4,7 +4,7 @@ class PagesController < ApplicationController
   end
 
   def claim 
-
+    @claim = Claim.new
   end
 
 end

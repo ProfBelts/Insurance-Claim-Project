@@ -1,9 +1,11 @@
 class Policy < ApplicationRecord
     before_validation :generate_policy_number, on: :create
-  
+
+    has_many :claims, as: :claimable
+
     validates :name, presence: true
     validates :policy_number, uniqueness: true
-  
+
     private
   
     def generate_policy_number

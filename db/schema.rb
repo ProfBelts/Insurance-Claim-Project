@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_09_021927) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_09_132728) do
   create_table "claims", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "claimable_type", null: false
@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_09_021927) do
     t.string "policy_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "policy_type"
     t.index ["policy_number"], name: "index_policies_on_policy_number", unique: true
   end
 

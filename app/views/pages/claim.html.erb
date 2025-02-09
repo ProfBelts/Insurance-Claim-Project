@@ -1,10 +1,72 @@
 <%= render 'layouts/navbar' %>
 <%= render 'layouts/sidebar' %>
 
-<main style="margin-left: 250px; padding:70px; margin-top: 50px;">
+<main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
   <div class="container">
-    <h1>Welcome to 1CISP</h1>
-    <p>Claim your Insurance!</p>
-  </div>
+  <%= form_with(model: @claim, url: claims_path, local: true) do |f| %>
+
+    <!-- Policy Type Selection -->
+    <div class="mb-3">
+      <%= f.label :policy_type, "Select Insurance Type", class: "form-label" %>
+      <%= f.select :policy_type, options_for_select(["Auto", "Property", "Health"]), 
+                    { prompt: "Select Insurance Type" }, 
+                    { class: "form-control", id: "policy_type" } %>
+    </div>
+  
+    <!-- Coverage Selection -->
+    <div class="mb-3">
+    <%= f.label :claimable_id, "Coverage", class: "form-label" %>
+    <%= f.select :claimable_id, [], { prompt: "Select Coverage" }, 
+                  { class: "form-control", id: "policy_select" } %>
+    </div>
+  
+    <!-- Submit -->
+    <div class="mb-3">
+      <%= f.submit "Submit Claim", class: "btn btn-primary" %>
+    </div>
+  <% end %>
 </main>
 
+<script> 
+document.addEventListener("DOMContentLoaded", function () {
+  const policyTypeSelect = document.getElementById("policy_type");
+  const policySelect = document.getElementById("policy_select");
+
+  if (!policyTypeSelect || !policySelect) return;
+
+  policyTypeSelect.addEventListener("change", async function () {
+    const selectedType = this.value;
+
+    if (!selectedType) {
+      policySelect.innerHTML = '<option value="">Select Coverage</option>';
+      policySelect.disabled = true;
+      return;
+    }
+
+    try {
+      const response = await fetch(`/policies/by_type?policy_type=${selectedType}`);
+      if (!response.ok) throw new Error("Failed to fetch policies");
+
+      const data = await response.json();
+      policySelect.innerHTML = '<option value="">Select Coverage</option>';
+
+      if (data.length === 0) {
+        policySelect.innerHTML += '<option value="" disabled>No policies available</option>';
+      } else {
+        data.forEach(policy => {
+          let option = document.createElement("option");
+          option.value = policy.id;
+          option.textContent = policy.name;
+          policySelect.appendChild(option);
+        });
+      }
+
+      policySelect.disabled = false;
+    } catch (error) {
+      console.error("Error fetching policies:", error);
+      policySelect.innerHTML = '<option value="" disabled>Error loading policies</option>';
+      policySelect.disabled = true;
+    }
+  });
+});
+</script>

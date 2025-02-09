@@ -1,5 +1,6 @@
 class Claim < ApplicationRecord
   belongs_to :user
+  belongs_to :policy, optional: true
   belongs_to :claimable, polymorphic: true
   # has_many :attachments, as: :attachable, dependent: :destroy
 
