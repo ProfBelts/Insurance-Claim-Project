@@ -11,7 +11,7 @@
             <% if current_user.profile_picture.attached? %>
               <img src="<%= url_for(current_user.profile_picture) %>" class="rounded-circle" height="30" width="30" style="object-fit: cover;" alt="Profile Picture">
             <% else %>
-              <img src="https://via.placeholder.com/30" class="rounded-circle" height="30" width="30" alt="Default Profile">
+              <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="rounded-circle" height="30" width="30" alt="Default Profile">
             <% end %>
             <span class="ms-2"><%= current_user.name %></span>
           </a>

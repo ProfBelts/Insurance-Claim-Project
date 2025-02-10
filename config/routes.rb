@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :admins
   get 'pages/home'
   get 'users/show', to: 'users#show', as: :user_profile
 
