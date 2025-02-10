@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'pages/home'
-  get 'users/show'
+  get 'users/show', to: 'users#show', as: :user_profile
 
   get 'dashboard/user', to: 'dashboard#user', as: :user_dashboard
 
@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
-  
+  resources :users, only: [:show]
   resources :claims, only: [:create]
   
   get "/claim", to: "pages#claim"
