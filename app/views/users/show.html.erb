@@ -1,3 +1,7 @@
+<%= render 'layouts/navbar' %>
+<%= render 'layouts/sidebar' %>
+
+<main style="margin-left: 100px; padding: 10px;">
 <section class="vh-100">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -9,23 +13,11 @@
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                 class="rounded-circle img-fluid" style="width: 100px;" />
             </div>
-            <h4 class="mb-2">Julie L. Arsenault</h4>
-            <p class="text-muted mb-4">@Programmer <span class="mx-2">|</span> <a
-                href="#!">mdbootstrap.com</a></p>
-            <div class="mb-4 pb-2">
-              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-floating">
-                <i class="fab fa-facebook-f fa-lg"></i>
-              </button>
-              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-floating">
-                <i class="fab fa-twitter fa-lg"></i>
-              </button>
-              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-floating">
-                <i class="fab fa-skype fa-lg"></i>
-              </button>
-            </div>
-            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-rounded btn-lg">
-              Message now
-            </button>
+            <h4 class="mb-2"><%= @user.name %></h4>
+            <p class="text-muted mb-4">Planholder <span class="mx-2">|</span> <a
+                href="#"><%= @user.email %></a></p>
+                <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-primary btn-rounded btn-lg" %>
+
             <div class="d-flex justify-content-between text-center mt-5 mb-2">
               <div>
                 <p class="mb-2 h5">8471</p>
@@ -47,3 +39,4 @@
     </div>
   </div>
 </section>
+</main>
