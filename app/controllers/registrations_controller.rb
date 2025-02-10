@@ -5,5 +5,6 @@ class RegistrationsController < Devise::RegistrationsController
         sign_out(resource) # Force logout after sign-up
         new_user_session_path # Redirect to sign-in page
     end
+
   end
   

@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+
+  has_many :attachments, as: :attachable
+  has_one_attached :profile_picture
   # Devise Modules (if using Devise)
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
