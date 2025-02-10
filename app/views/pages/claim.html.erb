@@ -28,7 +28,7 @@
 </main>
 
 <script> 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("turbo:load", function () {
   const policyTypeSelect = document.getElementById("policy_type");
   const policySelect = document.getElementById("policy_select");
 
@@ -36,19 +36,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   policyTypeSelect.addEventListener("change", async function () {
     const selectedType = this.value;
+    policySelect.innerHTML = '<option value="">Select Coverage</option>';
+    policySelect.disabled = true;
 
-    if (!selectedType) {
-      policySelect.innerHTML = '<option value="">Select Coverage</option>';
-      policySelect.disabled = true;
-      return;
-    }
+    if (!selectedType) return;
 
     try {
       const response = await fetch(`/policies/by_type?policy_type=${selectedType}`);
       if (!response.ok) throw new Error("Failed to fetch policies");
 
       const data = await response.json();
-      policySelect.innerHTML = '<option value="">Select Coverage</option>';
 
       if (data.length === 0) {
         policySelect.innerHTML += '<option value="" disabled>No policies available</option>';
