@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   devise_for :admins, controllers: { registrations: 'admins/registrations' }
   get 'pages/home'
+  get "/claim", to: "pages#claim"
+  get "/user_list", to: "pages#user_list"
+
   get 'users/show', to: 'users#show', as: :user_profile
 
   get 'dashboard/user', to: 'dashboard#user', as: :user_dashboard
-
   get 'dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
 
   devise_for :users, controllers: { registrations: 'users/registrations' } 
@@ -14,7 +16,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show]
   resources :claims, only: [:create]
   
-  get "/claim", to: "pages#claim"
+  
 
   get "/policies/by_type", to: "policies#by_type"
 

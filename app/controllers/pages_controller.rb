@@ -7,4 +7,10 @@ class PagesController < ApplicationController
     @claim = Claim.new
   end
 
+  def user_list
+
+    @users = User.all
+
+  end
+
 end

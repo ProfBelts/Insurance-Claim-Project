@@ -3,28 +3,49 @@
 
 <main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
   <div class="container">
-  <%= form_with(model: @claim, url: claims_path, local: true) do |f| %>
+    <%= form_with(model: @claim, url: claims_path, local: true, html: { multipart: true }) do |f| %>
 
-    <!-- Policy Type Selection -->
-    <div class="mb-3">
-      <%= f.label :policy_type, "Select Insurance Type", class: "form-label" %>
-      <%= f.select :policy_type, options_for_select(["Auto", "Property", "Health"]), 
-                    { prompt: "Select Insurance Type" }, 
-                    { class: "form-control", id: "policy_type" } %>
-    </div>
-  
-    <!-- Coverage Selection -->
-    <div class="mb-3">
-    <%= f.label :claimable_id, "Coverage", class: "form-label" %>
-    <%= f.select :claimable_id, [], { prompt: "Select Coverage" }, 
-                  { class: "form-control", id: "policy_select" } %>
-    </div>
-  
-    <!-- Submit -->
-    <div class="mb-3">
-      <%= f.submit "Submit Claim", class: "btn btn-primary" %>
-    </div>
-  <% end %>
+      <!-- Policy Type Selection -->
+      <div class="mb-3">
+        <%= f.label :policy_type, "Select Insurance Type", class: "form-label" %>
+        <%= f.select :policy_type, options_for_select(["Auto", "Property", "Health"]), 
+                      { prompt: "Select Insurance Type" }, 
+                      { class: "form-control", id: "policy_type" } %>
+      </div>
+    
+      <!-- Coverage Selection -->
+      <div class="mb-3">
+        <%= f.label :claimable_id, "Coverage", class: "form-label" %>
+        <%= f.select :claimable_id, [], { prompt: "Select Coverage" }, 
+                      { class: "form-control", id: "policy_select" } %>
+      </div>
+
+      <!-- Reason for Claiming -->
+      <div class="mb-3">
+        <%= f.label :reason_for_claiming, "Reason for Claiming", class: "form-label" %>
+        <%= f.text_area :reason_for_claiming, class: "form-control", rows: 4, placeholder: "Explain why you are filing this claim..." %>
+      </div>
+
+
+      <!-- Upload ID Photo -->
+      <div class="mb-3">
+        <%= f.label :id_photo, "Upload ID Photo", class: "form-label" %>
+        <%= f.file_field :id_photo, class: "form-control", accept: "image/*" %>
+      </div>
+
+      <!-- Upload Proof of Claim -->
+      <div class="mb-3">
+        <%= f.label :proof_of_claim, "Upload Proof of Claim", class: "form-label" %>
+        <%= f.file_field :proof_of_claim, class: "form-control", accept: "image/*" %>
+      </div>
+    
+      <!-- Submit -->
+      <div class="mb-3">
+        <%= f.submit "Submit Claim", class: "btn btn-primary" %>
+      </div>
+
+    <% end %>
+  </div>
 </main>
 
 <script> 

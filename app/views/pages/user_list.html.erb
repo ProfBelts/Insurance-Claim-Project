@@ -1,0 +1,62 @@
+<%= render 'layouts/navbar' %>
+<%= render 'layouts/sidebar' %>
+
+<main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
+    <h1> User List </h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @users.each do |user| %>
+                <tr>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.gender %></td>
+                    <td><%= user.phone_number %></td>
+                    <td>
+                        <!-- View Button (Triggers Modal) -->
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#userModal-<%= user.id %>">
+                            View
+                        </button>
+                        
+                        <!-- Edit Link -->
+                        <%= link_to 'Edit', edit_user_registration_path(user), class: "btn btn-warning btn-sm" %>
+
+                        <!-- Delete Link -->
+                        <%= link_to 'Delete', user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm" %>
+                    </td>
+                </tr>
+
+                <!-- Bootstrap Modal for User Details -->
+                <div class="modal fade" id="userModal-<%= user.id %>" tabindex="-1" aria-labelledby="userModalLabel-<%= user.id %>" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="userModalLabel-<%= user.id %>"><%= user.name %>'s Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Email:</strong> <%= user.email %></p>
+                                <p><strong>Gender:</strong> <%= user.gender %></p>
+                                <p><strong>Phone Number:</strong> <%= user.phone_number %></p>
+                                <p><strong>Created At:</strong> <%= user.created_at.strftime("%B %d, %Y") %></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <% end %>
+        </tbody>
+    </table>
+</main>
