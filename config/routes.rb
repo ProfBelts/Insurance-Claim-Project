@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   get 'dashboard/user', to: 'dashboard#user', as: :user_dashboard
 
+  get 'dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
+
   devise_for :users, controllers: { registrations: 'users/registrations' } 
 
   root "pages#home"
