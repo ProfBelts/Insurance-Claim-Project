@@ -12,12 +12,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
       def update
         super do |user|
           if params[:user][:file].present?
+            # Find existing profile picture or create a new one
             attachment = user.attachments.find_or_initialize_by(category: "profile_picture")
             attachment.file = params[:user][:file]
             attachment.save
           end
+      
+          # Redirect to user dashboard after successful update
+          redirect_to user_dashboard_path and return
         end
       end
+      
       
       
 
