@@ -6,10 +6,10 @@
       <%= render "users/shared/error_messages", resource: resource %>
 
 
-      <!-- Profile Picture --><div class="mb-3">
-      <%= f.label :profile_picture, "Upload Profile Picture", class: "form-label" %>
-      <%= f.file_field :profile_picture, class: "form-control" %>
-    </div>
+      <div class="mb-3">
+        <%= f.label :file, "Upload Profile Picture", class: "form-label" %>
+        <%= f.file_field :file, class: "form-control" %>
+      </div>
     
       <!-- Name -->
       <div class="mb-3">

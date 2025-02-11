@@ -11,13 +11,11 @@
           <div class="card-body text-center">
             <div class="mt-3 mb-4">
             <div class="mt-3 mb-4 text-center">
-            <% if current_user.profile_picture.attached? %>
-              <img src="<%= url_for(current_user.profile_picture) %>" 
-                   class="rounded-circle shadow-4-strong" 
-                   style="width: 150px; height: 150px;" 
-                   alt="Profile Picture">
+            <% profile_picture = current_user.attachments.find_by(category: "profile_picture") %>
+            <% if profile_picture.present? %>
+            <%= image_tag url_for(profile_picture.file), class: "rounded-circle", height: "200", width: "200", alt: "Profile Picture" %>
             <% else %>
-              <p>No profile picture uploaded</p>
+              <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" class="rounded-circle" height="30" width="30" alt="Default Profile">
             <% end %>
           </div>
           
