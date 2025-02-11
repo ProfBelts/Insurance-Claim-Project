@@ -9,7 +9,7 @@
 
       <% elsif current_admin.present? %>
         <%= link_to 'Admin Dashboard', '#', class: "list-group-item list-group-item-action py-2 ripple" %>
-        <%= link_to 'Manage Claims', '#', class: "list-group-item list-group-item-action py-2 ripple" %>
+        <%= link_to 'Manage Claims', manage_claim_path, class: "list-group-item list-group-item-action py-2 ripple" %>
         <%= link_to 'User Management', user_list_path, class: "list-group-item list-group-item-action py-2 ripple" %>  
       <% end %>
 

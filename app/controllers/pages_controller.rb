@@ -13,4 +13,8 @@ class PagesController < ApplicationController
 
   end
 
+  def manage_claim
+    @claim = Claim.all
+  end
+
 end

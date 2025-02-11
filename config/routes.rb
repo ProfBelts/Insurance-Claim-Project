@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'pages/home'
   get "/claim", to: "pages#claim"
   get "/user_list", to: "pages#user_list"
+  get "/manage_claim", to: "pages#manage_claim"
 
   get 'users/show', to: 'users#show', as: :user_profile
 
