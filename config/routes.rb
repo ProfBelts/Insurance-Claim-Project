@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "/claim", to: "pages#claim"
   get "/user_list", to: "pages#user_list"
   get "/manage_claim", to: "pages#manage_claim"
+  get "/transactions", to: "pages#transactions"
 
   get 'users/show', to: 'users#show', as: :user_profile
 

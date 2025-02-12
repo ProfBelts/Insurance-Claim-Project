@@ -1,3 +1,5 @@
+
+
 <nav id="sidebarMenu" class="d-lg-block sidebar bg-white position-fixed vh-100" style="width: 250px; top: 56px; left: 0;">
   <div class="position-sticky">
     <div class="list-group list-group-flush mx-1 mt-2">
@@ -5,7 +7,7 @@
       <% if current_user.present? %>
         <%= link_to 'Home', user_dashboard_path, class: "list-group-item list-group-item-action py-2 ripple" %>
         <%= link_to 'File a Claim', claim_path, class: "list-group-item list-group-item-action py-2 ripple" %>
-        <%= link_to 'My Transactions', '#', class: "list-group-item list-group-item-action py-2 ripple" %>
+        <%= link_to 'My Transactions', transactions_path, class: "list-group-item list-group-item-action py-2 ripple" %>
 
       <% elsif current_admin.present? %>
         <%= link_to 'Admin Dashboard', admin_dashboard_path, class: "list-group-item list-group-item-action py-2 ripple" %>

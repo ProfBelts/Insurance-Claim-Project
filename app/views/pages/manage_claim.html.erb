@@ -16,43 +16,43 @@
                 </tr>
             </thead>
             <tbody>
-                <% @claims.each do |claim| %>
-                     <tr id="claim_<%= claim.id %>">
-                        <td><%= claim.transaction_number %></td>
-                        <td><%= claim.user.name %></td>
-                        <td><%= claim.claimable.name %></td>
-                        <td><%= claim.claimable.policy_type %></td>
-                        <td class="text-center">
-                            <button class="btn btn-info btn-sm view-details-btn" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#viewDetailsModal"
-                                    data-transaction="<%= claim.transaction_number %>"
-                                    data-name="<%= claim.user.name %>"
-                                    data-policy="<%= claim.claimable.name %>"
-                                    data-type="<%= claim.claimable.policy_type %>"
-                                    data-reason="<%= claim.reason %>"
-                                    data-id-photo="<%= claim.attachments.find_by(category: "id_photo").file.attached? ? url_for(claim.attachments.find_by(category: "id_photo").file) : '' %>"
-                                    data-proof="<%= claim.attachments.find_by(category: "proof_of_claim").file.attached? ? url_for(claim.attachments.find_by(category: "proof_of_claim").file) : '' %>">                                   
-                                <i class="fas fa-eye"></i> View Details
+            <% @claims.each do |claim| %>
+                <% next if claim.status == "approved" || claim.status == "rejected" %> <!-- Skip approved/rejected claims -->
+                <tr id="claim_<%= claim.id %>">
+                    <td><%= claim.transaction_number %></td>
+                    <td><%= claim.user.name %></td>
+                    <td><%= claim.claimable.name %></td>
+                    <td><%= claim.claimable.policy_type %></td>
+                    <td class="text-center">
+                        <button class="btn btn-info btn-sm view-details-btn" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#viewDetailsModal"
+                                data-transaction="<%= claim.transaction_number %>"
+                                data-name="<%= claim.user.name %>"
+                                data-policy="<%= claim.claimable.name %>"
+                                data-type="<%= claim.claimable.policy_type %>"
+                                data-reason="<%= claim.reason %>"
+                                data-id-photo="<%= claim.attachments.find_by(category: "id_photo").file.attached? ? url_for(claim.attachments.find_by(category: "id_photo").file) : '' %>"
+                                data-proof="<%= claim.attachments.find_by(category: "proof_of_claim").file.attached? ? url_for(claim.attachments.find_by(category: "proof_of_claim").file) : '' %>">                                   
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        
+                        <%= form_with model: claim, url: approve_claim_path(claim), method: :patch, class: "d-inline claim-action-form", data: { claim_id: claim.id } do %>
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-check"></i> Approve
                             </button>
-                            <%= form_with model: claim, url: approve_claim_path(claim), method: :patch, class: "d-inline claim-action-form", data: { claim_id: claim.id } do %>
-                                <button type="submit" class="btn btn-success btn-sm">
-                                    <i class="fas fa-check"></i> Approve
-                                </button>
-                            <% end %>
-                            
-                            <%= form_with model: claim, url: reject_claim_path(claim), method: :patch, class: "d-inline claim-action-form", data: { claim_id: claim.id } do %>
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fas fa-times"></i> Reject
-                                </button>
-                            <% end %>
-                            
-                              
-                              
-                        </td>
-                    </tr>
-                <% end %>
-            </tbody>
+                        <% end %>
+        
+                        <%= form_with model: claim, url: reject_claim_path(claim), method: :patch, class: "d-inline claim-action-form", data: { claim_id: claim.id } do %>
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        <% end %>
+                    </td>
+                </tr>
+            <% end %>
+        </tbody>
+        
         </table>
     </div>
 </main>

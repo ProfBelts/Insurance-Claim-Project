@@ -1,0 +1,17 @@
+<%= render 'layouts/navbar' %>
+<%= render 'layouts/sidebar' %>
+
+<main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
+    <h1 class="mb-4">My Transactions</h1>
+
+    <% @claims.each do |claim| %>  
+        <div class="card mb-3" style="width: 100rem;">
+            <div class="card-body text-left">
+                <h4 class="card-title"><span>Transaction Number:</span> <%= claim.transaction_number %></h4>
+                <p class="card-text"><span>Policyholder Name:</span> <%= claim.user.name %></p>
+                <p class="card-text"><span>Status:</span> <%= claim.status %></p>
+            </div>
+        </div>
+    <% end %>
+
+</main> <!-- Properly closed the main tag -->
