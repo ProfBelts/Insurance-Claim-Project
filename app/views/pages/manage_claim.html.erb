@@ -1,15 +1,105 @@
 <%= render 'layouts/navbar' %>
 <%= render 'layouts/sidebar' %>
 
-
 <main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
-    <h1> Manage Claim </h1>
+    <h1 class="mb-4">Manage Claims</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Transaction Number</th>
+                    <th>Policyholder Name</th>
+                    <th>Policy Name</th>
+                    <th>Policy Type</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @claims.each do |claim| %>
+                    <tr>
+                        <td><%= claim.transaction_number %></td>
+                        <td><%= claim.user.name %></td>
+                        <td><%= claim.claimable.name %></td>
+                        <td><%= claim.claimable.policy_type %></td>
+                        <td class="text-center">
+                            <button class="btn btn-info btn-sm view-details-btn" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewDetailsModal"
+                                    data-transaction="<%= claim.transaction_number %>"
+                                    data-name="<%= claim.user.name %>"
+                                    data-policy="<%= claim.claimable.name %>"
+                                    data-type="<%= claim.claimable.policy_type %>"
+                                    data-reason="<%= claim.reason_for_claiming %>"
+                                    data-id-photo="<%= claim.attachments.find_by(category: 'id_photo')&.file_url %>"
+                                    data-proof="<%= claim.attachments.find_by(category: 'proof_of_claim')&.file_url %>">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            <a href="#" class="btn btn-success btn-sm">
+                                <i class="fas fa-check"></i> Approve
+                            </a>
+                            <a href="#" class="btn btn-danger btn-sm">
+                                <i class="fas fa-times"></i> Reject
+                            </a>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
 </main>
 
-<table> 
-    <thead>
-        <tr>
-            <th> Name </th>
-        </tr>
-    </thead>
-</table>
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewDetailsModalLabel">Claim Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Transaction Number:</strong> <span id="modalTransaction"></span></p>
+                <p><strong>Policyholder Name:</strong> <span id="modalName"></span></p>
+                <p><strong>Policy Name:</strong> <span id="modalPolicy"></span></p>
+                <p><strong>Policy Type:</strong> <span id="modalType"></span></p>
+                <p><strong>Reason for Claiming:</strong> <span id="modalReason"></span></p>
+                <p><strong>ID:</strong> <a id="modalID" href="#" target="_blank">View ID</a></p>
+                <p><strong>Proof of Claim:</strong> <a id="modalProof" href="#" target="_blank">View Proof</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("turbo:load", function() {
+    document.querySelectorAll(".view-details-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            document.getElementById("modalTransaction").textContent = this.dataset.transaction;
+            document.getElementById("modalName").textContent = this.dataset.name;
+            document.getElementById("modalPolicy").textContent = this.dataset.policy;
+            document.getElementById("modalType").textContent = this.dataset.type;
+            document.getElementById("modalReason").textContent = this.dataset.reason;
+
+            const idPhotoLink = document.getElementById("modalID");
+            if (this.dataset.idPhoto) {
+                idPhotoLink.href = this.dataset.idPhoto;
+                idPhotoLink.textContent = "View ID";
+                idPhotoLink.style.display = "inline";
+            } else {
+                idPhotoLink.textContent = "No ID uploaded";
+                idPhotoLink.style.display = "none";
+            }
+
+            const proofLink = document.getElementById("modalProof");
+            if (this.dataset.proof) {
+                proofLink.href = this.dataset.proof;
+                proofLink.textContent = "View Proof";
+                proofLink.style.display = "inline";
+            } else {
+                proofLink.textContent = "No Proof uploaded";
+                proofLink.style.display = "none";
+            }
+        });
+    });
+});
+</script>

@@ -14,7 +14,7 @@ class PagesController < ApplicationController
   end
 
   def manage_claim
-    @claim = Claim.all
+    @claims = Claim.all
   end
 
 end
