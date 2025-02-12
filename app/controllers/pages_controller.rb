@@ -17,4 +17,8 @@ class PagesController < ApplicationController
     @claims = Claim.all
   end
 
+  
+
+
+
 end

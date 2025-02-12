@@ -17,7 +17,8 @@ Rails.application.routes.draw do
   resources :users, only: [:show]
   resources :claims, only: [:create]
   
-  
+  patch "/claims/:id/approve", to: "claims#approve", as: :approve_claim
+  patch "/claims/:id/reject", to: "claims#reject", as: :reject_claim
 
   get "/policies/by_type", to: "policies#by_type"
 

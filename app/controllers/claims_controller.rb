@@ -1,4 +1,6 @@
 class ClaimsController < ApplicationController
+before_action :set_claim, only: [:approve, :reject]
+
   def create
     @claim = Claim.new(claim_params)
     
@@ -13,13 +15,29 @@ class ClaimsController < ApplicationController
     end
   end
   
+  def approve
+    @claim.update(status: "approved")
+    head :ok
+  end
+
+  def reject
+    @claim.update(status: "rejected")
+    head :ok
+  end
+  
+
   private
   
   def claim_params
-    params.require(:claim).permit(:claimable_id, :reason_for_claim).merge(
+    params.require(:claim).permit(:claimable_id, :reason).merge(
       user_id: current_user.id, 
       claimable_type: "Policy", 
       status: "pending"
     )
   end
+
+  def set_claim
+    @claim = Claim.find(params[:id])
+  end
+
 end

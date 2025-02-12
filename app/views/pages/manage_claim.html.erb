@@ -17,7 +17,7 @@
             </thead>
             <tbody>
                 <% @claims.each do |claim| %>
-                    <tr>
+                     <tr id="claim_<%= claim.id %>">
                         <td><%= claim.transaction_number %></td>
                         <td><%= claim.user.name %></td>
                         <td><%= claim.claimable.name %></td>
@@ -30,17 +30,25 @@
                                     data-name="<%= claim.user.name %>"
                                     data-policy="<%= claim.claimable.name %>"
                                     data-type="<%= claim.claimable.policy_type %>"
-                                    data-reason="<%= claim.reason_for_claiming %>"
-                                    data-id-photo="<%= claim.attachments.find_by(category: 'id_photo')&.file_url %>"
-                                    data-proof="<%= claim.attachments.find_by(category: 'proof_of_claim')&.file_url %>">
+                                    data-reason="<%= claim.reason %>"
+                                    data-id-photo="<%= claim.attachments.find_by(category: "id_photo").file.attached? ? url_for(claim.attachments.find_by(category: "id_photo").file) : '' %>"
+                                    data-proof="<%= claim.attachments.find_by(category: "proof_of_claim").file.attached? ? url_for(claim.attachments.find_by(category: "proof_of_claim").file) : '' %>">                                   
                                 <i class="fas fa-eye"></i> View Details
                             </button>
-                            <a href="#" class="btn btn-success btn-sm">
-                                <i class="fas fa-check"></i> Approve
-                            </a>
-                            <a href="#" class="btn btn-danger btn-sm">
-                                <i class="fas fa-times"></i> Reject
-                            </a>
+                            <%= form_with model: claim, url: approve_claim_path(claim), method: :patch, class: "d-inline claim-action-form", data: { claim_id: claim.id } do %>
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                            <% end %>
+                            
+                            <%= form_with model: claim, url: reject_claim_path(claim), method: :patch, class: "d-inline claim-action-form", data: { claim_id: claim.id } do %>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            <% end %>
+                            
+                              
+                              
                         </td>
                     </tr>
                 <% end %>
@@ -58,14 +66,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><strong>Transaction Number:</strong> <span id="modalTransaction"></span></p>
-                <p><strong>Policyholder Name:</strong> <span id="modalName"></span></p>
-                <p><strong>Policy Name:</strong> <span id="modalPolicy"></span></p>
-                <p><strong>Policy Type:</strong> <span id="modalType"></span></p>
-                <p><strong>Reason for Claiming:</strong> <span id="modalReason"></span></p>
-                <p><strong>ID:</strong> <a id="modalID" href="#" target="_blank">View ID</a></p>
-                <p><strong>Proof of Claim:</strong> <a id="modalProof" href="#" target="_blank">View Proof</a></p>
-            </div>
+            <p><strong>Transaction Number:</strong> <span id="modalTransaction"></span></p>
+            <p><strong>Policyholder Name:</strong> <span id="modalName"></span></p>
+            <p><strong>Policy Name:</strong> <span id="modalPolicy"></span></p>
+            <p><strong>Policy Type:</strong> <span id="modalType"></span></p>
+            <p><strong>Reason for Claiming:</strong> <span id="modalReason"></span></p>
+            
+            <p><strong>ID Photo:</strong></p>
+            <img id="modalIDPhoto" src="" alt="ID Photo" class="img-fluid d-none" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+        
+            <p><strong>Proof of Claim:</strong></p>
+            <img id="modalProofPhoto" src="" alt="Proof of Claim" class="img-fluid d-none" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+        </div>
+        
         </div>
     </div>
 </div>
@@ -80,26 +93,58 @@ document.addEventListener("turbo:load", function() {
             document.getElementById("modalType").textContent = this.dataset.type;
             document.getElementById("modalReason").textContent = this.dataset.reason;
 
-            const idPhotoLink = document.getElementById("modalID");
+            // ID Photo
+            const idPhoto = document.getElementById("modalIDPhoto");
             if (this.dataset.idPhoto) {
-                idPhotoLink.href = this.dataset.idPhoto;
-                idPhotoLink.textContent = "View ID";
-                idPhotoLink.style.display = "inline";
+                idPhoto.src = this.dataset.idPhoto;
+                idPhoto.classList.remove("d-none"); // Show image
             } else {
-                idPhotoLink.textContent = "No ID uploaded";
-                idPhotoLink.style.display = "none";
+                idPhoto.classList.add("d-none"); // Hide if no image
             }
 
-            const proofLink = document.getElementById("modalProof");
+            // Proof of Claim
+            const proofPhoto = document.getElementById("modalProofPhoto");
             if (this.dataset.proof) {
-                proofLink.href = this.dataset.proof;
-                proofLink.textContent = "View Proof";
-                proofLink.style.display = "inline";
+                proofPhoto.src = this.dataset.proof;
+                proofPhoto.classList.remove("d-none"); // Show image
             } else {
-                proofLink.textContent = "No Proof uploaded";
-                proofLink.style.display = "none";
+                proofPhoto.classList.add("d-none"); // Hide if no image
             }
         });
     });
+    document.querySelectorAll(".claim-action-form").forEach(form => {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            let claimId = this.dataset.claimId;
+            let row = document.getElementById(`claim_${claimId}`);
+            let formAction = this.action;
+            let formMethod = this.method;
+
+            // Confirm before proceeding
+            if (!confirm("Are you sure you want to proceed with this action?")) {
+                return;
+            }
+
+            // Send AJAX request using Fetch API
+            fetch(formAction, {
+                method: "PATCH",
+                headers: {
+                    "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content,
+                    "Content-Type": "application/json"
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Remove row from table on success
+                    row.remove();
+                } else {
+                    alert("Something went wrong. Please try again.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    });
 });
+
 </script>
