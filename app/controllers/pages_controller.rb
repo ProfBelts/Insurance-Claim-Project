@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  before_action :authenticate_user_or_admin! # Require authentication for all other actions
+
   def home
     reset_session
   end
@@ -8,9 +10,7 @@ class PagesController < ApplicationController
   end
 
   def user_list
-
-    @users = User.all
-
+    @claims = Claim.where(status: ["approved", "rejected"])
   end
 
   def manage_claim
@@ -18,13 +18,12 @@ class PagesController < ApplicationController
   end
 
   def transactions
-    if current_user 
-      @claims = Claim.where(user_id: current_user.id)
-    else
-      redirect_to root_path, alert: "You are not authorized to access this page"
-    end
+    @claims = Claim.where(user_id: current_user.id).order(created_at: :desc)
   end
 
-
-
+  def authenticate_user_or_admin!
+    unless admin_signed_in? || user_signed_in?
+      redirect_to new_session_path(:user), alert: "You must be logged in to access this page."
+    end
+  end
 end

@@ -5,13 +5,40 @@
     <h1 class="mb-4">My Transactions</h1>
 
     <% @claims.each do |claim| %>  
-        <div class="card mb-3" style="width: 100rem;">
+        <div class="card mb-3 shadow-sm" style="max-width: 800px;">
             <div class="card-body text-left">
-                <h4 class="card-title"><span>Transaction Number:</span> <%= claim.transaction_number %></h4>
-                <p class="card-text"><span>Policyholder Name:</span> <%= claim.user.name %></p>
-                <p class="card-text"><span>Status:</span> <%= claim.status %></p>
+                <h4 class="card-title">
+                    <strong>Transaction Number:</strong> <%= claim.transaction_number %>
+                </h4>
+                <p class="card-text"><strong>Policyholder Name:</strong> <%= claim.user.name %></p>
+                <p class="card-text">
+                    <strong>Status:</strong> 
+                    <span class="badge status-badge" data-status="<%= claim.status %>">
+                        <%= claim.status.capitalize %>
+                    </span>
+                </p>
+                <p class="card-text"><strong>Claim Filed:</strong> <%= claim.created_at.strftime("%B %d, %Y") %></p>
             </div>
         </div>
     <% end %>
 
-</main> <!-- Properly closed the main tag -->
+</main>
+
+<!-- Add CSS to style the status badge -->
+<style>
+    .status-badge {
+        padding: 5px 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        color: white;
+    }
+    .status-badge[data-status="approved"] {
+        background-color: green;
+    }
+    .status-badge[data-status="rejected"] {
+        background-color: red;
+    }
+    .status-badge[data-status="pending"] {
+        background-color: blue;
+    }
+</style>

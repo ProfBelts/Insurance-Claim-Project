@@ -5,4 +5,8 @@ class Admins::RegistrationsController < Devise::RegistrationsController
         super
     end
 
+    def update
+        redirect_to admin_dashboard_path and return
+    end
+
 end

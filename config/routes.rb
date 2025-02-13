@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   devise_for :admins, controllers: { registrations: 'admins/registrations' }
+  
   get 'pages/home'
   get "/claim", to: "pages#claim"
   get "/user_list", to: "pages#user_list"
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
   get 'dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
 
   devise_for :users, controllers: { registrations: 'users/registrations' } 
+  
 
   root "pages#home"
 

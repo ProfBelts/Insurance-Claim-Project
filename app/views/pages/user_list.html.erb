@@ -2,61 +2,114 @@
 <%= render 'layouts/sidebar' %>
 
 <main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
-    <h1> User List </h1>
+    <h1> Users with Processed Claims </h1>
 
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Gender</th>
+                <th>Claim Filed</th>
+                <th>Claim Processed</th>
                 <th>Phone Number</th>
-                <th>Actions</th>
+                <th>Status</th>
+                <th>Claim Details</th>
+                <th>Approved By: </th>
             </tr>
         </thead>
         <tbody>
-            <% @users.each do |user| %>
+            <% @claims.each do |claim| %>
                 <tr>
-                    <td><%= user.name %></td>
-                    <td><%= user.email %></td>
-                    <td><%= user.gender %></td>
-                    <td><%= user.phone_number %></td>
+                    <td><%= claim.user.name %></td>
+                    <td><%= claim.user.email %></td>
+                    <td><%= claim.created_at.strftime("%B %d, %Y") %></td>
+                    <td><%= claim.updated_at.strftime("%B %d, %Y") %></td>
+                    <td><%= claim.user.phone_number %></td>
+                    
+                    <td>
+                        <% if claim.status == "approved" %>
+                            <span class="badge bg-success">Approved</span>
+                        <% elsif claim.status == "rejected" %>
+                            <span class="badge bg-danger">Rejected</span>
+                        <% else %>
+                            <span class="badge bg-secondary"><%= claim.status.capitalize %></span>
+                        <% end %>
+                    </td>
+
                     <td>
                         <!-- View Button (Triggers Modal) -->
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#userModal-<%= user.id %>">
-                            View
-                        </button>
-                        
-                        <!-- Edit Link -->
-                        <%= link_to 'Edit', edit_user_registration_path(user), class: "btn btn-warning btn-sm" %>
-
-                        <!-- Delete Link -->
-                        <%= link_to 'Delete', user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm" %>
+                        <button class="btn btn-info btn-sm view-details-btn" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#viewDetailsModal"
+                        data-transaction="<%= claim.transaction_number %>"
+                        data-name="<%= claim.user.name %>"
+                        data-policy="<%= claim.claimable.name %>"
+                        data-type="<%= claim.claimable.policy_type %>"
+                        data-reason="<%= claim.reason %>"
+                        data-id-photo="<%= claim.attachments.find_by(category: "id_photo").file.attached? ? url_for(claim.attachments.find_by(category: "id_photo").file) : '' %>"
+                        data-proof="<%= claim.attachments.find_by(category: "proof_of_claim").file.attached? ? url_for(claim.attachments.find_by(category: "proof_of_claim").file) : '' %>">                                   
+                    <i class="fas fa-eye"></i> View Details
+                </button>
                     </td>
+                    <td><%= claim.admin.name %></td>
                 </tr>
 
-                <!-- Bootstrap Modal for User Details -->
-                <div class="modal fade" id="userModal-<%= user.id %>" tabindex="-1" aria-labelledby="userModalLabel-<%= user.id %>" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="userModalLabel-<%= user.id %>"><%= user.name %>'s Details</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <p><strong>Email:</strong> <%= user.email %></p>
-                                <p><strong>Gender:</strong> <%= user.gender %></p>
-                                <p><strong>Phone Number:</strong> <%= user.phone_number %></p>
-                                <p><strong>Created At:</strong> <%= user.created_at.strftime("%B %d, %Y") %></p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
+                <div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="viewDetailsModalLabel">Claim Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <div class="modal-body">
+                        <p><strong>Transaction Number:</strong> <span id="modalTransaction"></span></p>
+                        <p><strong>Policyholder Name:</strong> <span id="modalName"></span></p>
+                        <p><strong>Policy Name:</strong> <span id="modalPolicy"></span></p>
+                        <p><strong>Policy Type:</strong> <span id="modalType"></span></p>
+                        <p><strong>Reason for Claiming:</strong> <span id="modalReason"></span></p>
+                        
+                        <p><strong>ID Photo:</strong></p>
+                        <img id="modalIDPhoto" src="" alt="ID Photo" class="img-fluid d-none" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+                    
+                        <p><strong>Proof of Claim:</strong></p>
+                        <img id="modalProofPhoto" src="" alt="Proof of Claim" class="img-fluid d-none" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+                    </div>
+                    
                     </div>
                 </div>
+            </div>
 
             <% end %>
         </tbody>
     </table>
 </main>
+
+<script> 
+document.querySelectorAll(".view-details-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            document.getElementById("modalTransaction").textContent = this.dataset.transaction;
+            document.getElementById("modalName").textContent = this.dataset.name;
+            document.getElementById("modalPolicy").textContent = this.dataset.policy;
+            document.getElementById("modalType").textContent = this.dataset.type;
+            document.getElementById("modalReason").textContent = this.dataset.reason;
+
+            // ID Photo
+            const idPhoto = document.getElementById("modalIDPhoto");
+            if (this.dataset.idPhoto) {
+                idPhoto.src = this.dataset.idPhoto;
+                idPhoto.classList.remove("d-none"); // Show image
+            } else {
+                idPhoto.classList.add("d-none"); // Hide if no image
+            }
+
+            // Proof of Claim
+            const proofPhoto = document.getElementById("modalProofPhoto");
+            if (this.dataset.proof) {
+                proofPhoto.src = this.dataset.proof;
+                proofPhoto.classList.remove("d-none"); // Show image
+            } else {
+                proofPhoto.classList.add("d-none"); // Hide if no image
+            }
+        });
+    });
+</script>

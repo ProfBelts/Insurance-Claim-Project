@@ -16,12 +16,12 @@ before_action :set_claim, only: [:approve, :reject]
   end
   
   def approve
-    @claim.update(status: "approved")
+    @claim.update(status: "approved", approved_by_id: current_admin.id, processed_at: Time.current)
     head :ok
   end
 
   def reject
-    @claim.update(status: "rejected")
+    @claim.update(status: "rejected", approved_by_id: current_admin.id, processed_at: Time.current)
     head :ok
   end
   
