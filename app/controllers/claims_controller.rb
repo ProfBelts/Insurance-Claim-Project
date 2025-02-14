@@ -8,7 +8,7 @@ before_action :set_claim, only: [:approve, :reject]
       @claim.attachments.create(file: params[:claim][:id_photo], category: "id_photo") if params[:claim][:id_photo].present?
       @claim.attachments.create(file: params[:claim][:proof_of_claim], category: "proof_of_claim") if params[:claim][:proof_of_claim].present?
 
-      redirect_to claim_path, notice: "Claim submitted successfully"
+      redirect_to transactions_path, flash: { notice: "Claim submitted successfully" }
     else
       flash[:alert] = @claim.errors.full_messages.join(", ")
       redirect_to claim_path # Redirect back to the claim form

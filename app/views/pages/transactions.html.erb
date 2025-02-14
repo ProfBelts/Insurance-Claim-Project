@@ -17,7 +17,22 @@
                         <%= claim.status.capitalize %>
                     </span>
                 </p>
-                <p class="card-text"><strong>Claim Filed:</strong> <%= claim.created_at.strftime("%B %d, %Y") %></p>
+                <p class="card-text">
+                <strong>Claim Filed:</strong> 
+                <%= claim.created_at.in_time_zone("Asia/Manila").strftime("%B %d, %Y: %I:%M%p") %>
+              </p>
+              <% if claim.processed_at.present? %>
+              <p class = "card-text">
+                <strong>Claim Responded:</strong>
+                <%= claim.processed_at.in_time_zone("Asia/Manila").strftime("%B %d, %Y: %I:%M%p") %>
+              </p>
+            <% else %>
+              <p class = "card-text">
+                <strong>Claim Responded:</strong>
+                <%= "Not yet processed" %>
+              </p>
+            <% end %>
+                
             </div>
         </div>
     <% end %>
