@@ -1,11 +1,14 @@
 <div aria-live="polite" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
   <!-- Flash Messages Toasts -->
-  <% flash.each do |type, message| %>
+  <% flash.each do |type, messages| %>
     <% bg_class = case type.to_sym
       when :notice then 'bg-success text-white' # Green for success
       when :alert  then 'bg-danger text-white'  # Red for error
       else 'bg-info text-white'                 # Default style (blue)
     end %>
+
+    <% messages = Array(messages).flat_map { |msg| msg.split(', ') }.join('<br>') %> 
+    <!-- Split messages at ", " and join with <br> -->
 
     <div class="toast <%= bg_class %> border-0 fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
       <div class="toast-header bg-white text-dark">
@@ -14,7 +17,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        <%= message %>
+        <%= messages.html_safe %> <!-- Ensure <br> renders correctly -->
       </div>
     </div>
   <% end %>

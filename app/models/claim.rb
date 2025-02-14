@@ -11,9 +11,39 @@ class Claim < ApplicationRecord
 
   enum status: { pending: 0, approved: 1, rejected: 2 }
 
+  validate :claimable_presence
+  validate :must_have_required_attachments
+
   validates :status, inclusion: { in: statuses.keys }
+  validates :status, inclusion: { in: statuses.keys }
+  validates :reason, presence: {message: "field should not be empty"}, length: { minimum: 5, maximum: 500 }
+  
+
+
   
   private
+
+
+  # Custom Validations
+  def claimable_presence  # ✅ Make sure this method is present
+    if claimable_id.blank?
+      errors.add(:base, "Please Select a Policy Type and Coverage")
+    end
+  end
+
+
+  def must_have_required_attachments
+    required_categories = ["id_photo", "proof_of_claim"]
+    uploaded_categories = attachments.pluck(:category)  # Get all uploaded categories
+
+    missing_categories = required_categories - uploaded_categories  # Check which ones are missing
+
+    if missing_categories.present?
+      errors.add(:base, "Please upload the required documents")
+    end
+  end
+
+
 
   def generate_transaction_number
     loop do
