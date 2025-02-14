@@ -74,3 +74,5 @@ gem 'bootstrap', '~> 5.1.3'
 
 # gem 'ruby-vips'
 gem 'faker'
+
+gem 'foreman', github: 'ddollar/foreman'

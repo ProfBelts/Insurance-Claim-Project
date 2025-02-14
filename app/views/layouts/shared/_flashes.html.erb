@@ -1,19 +1,17 @@
 <div aria-live="polite" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
   <!-- Flash Messages Toasts -->
   <% flash.each do |type, message| %>
-    <% toast_class = case type.to_sym
-      when :notice then 'bg-success text-white' # Success message
-      when :alert  then 'bg-danger text-white'  # Error message
-      else 'bg-info text-white'                 # Default style
+    <% bg_class = case type.to_sym
+      when :notice then 'bg-success text-white' # Green for success
+      when :alert  then 'bg-danger text-white'  # Red for error
+      else 'bg-info text-white'                 # Default style (blue)
     end %>
 
-    <div class="toast <%= toast_class %> fade show" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
-      <div class="toast-header">
-        <strong class="mr-auto"><%= type.capitalize %></strong>
+    <div class="toast <%= bg_class %> border-0 fade show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3000">
+      <div class="toast-header bg-white text-dark">
+        <strong class="me-auto"><%= type.capitalize %></strong>
         <small class="text-muted">Just now</small>
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
         <%= message %>
@@ -25,9 +23,8 @@
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     // Initialize Bootstrap toasts
-    var toastElements = document.querySelectorAll('.toast');
-    toastElements.forEach(function(toast) {
-      new bootstrap.Toast(toast).show();
+    document.querySelectorAll('.toast').forEach(function(toastElement) {
+      new bootstrap.Toast(toastElement).show();
     });
   });
 </script>
