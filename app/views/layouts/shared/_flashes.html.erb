@@ -1,4 +1,4 @@
-<div aria-live="polite" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+<div data-controller="toast" aria-live="polite" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
   <!-- Flash Messages Toasts -->
   <% flash.each do |type, messages| %>
     <% bg_class = case type.to_sym
