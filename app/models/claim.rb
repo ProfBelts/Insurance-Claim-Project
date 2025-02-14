@@ -7,7 +7,14 @@ class Claim < ApplicationRecord
   belongs_to :claimable, polymorphic: true
   has_many :attachments, as: :attachable, dependent: :destroy
   
-  
+  def self.ransackable_attributes(auth_object = nil)
+    ["transaction_number", "status"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["user", "admin", "claimable", "attachments"]
+  end
+
 
   enum status: { pending: 0, approved: 1, rejected: 2 }
 

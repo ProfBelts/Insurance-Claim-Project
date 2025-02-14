@@ -11,8 +11,13 @@ class PagesController < ApplicationController
   end
 
   def user_list
-    @claims = Claim.where(status: ["approved", "rejected"])
+    @q = Claim.ransack(params[:q])
+    @claims = @q.result(distinct: true).where(status: ["approved", "rejected"])
+    
+    puts "Search Params: #{params[:q]}"
+    puts "SQL Query: #{@claims.to_sql}"
   end
+  
 
   def manage_claim
     @claims = Claim.all
