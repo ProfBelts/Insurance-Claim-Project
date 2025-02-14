@@ -25,6 +25,7 @@ end
   
   def approve
     @claim.update(status: "approved", approved_by_id: current_admin.id, processed_at: Time.current)
+    flash[:notice] = "Claim approved successfully"
     head :ok
   end
 

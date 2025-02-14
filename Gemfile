@@ -76,3 +76,5 @@ gem 'bootstrap', '~> 5.1.3'
 gem 'faker'
 
 gem 'foreman', github: 'ddollar/foreman'
+
+gem 'ransack'

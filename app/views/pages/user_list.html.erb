@@ -4,9 +4,13 @@
 <main style="margin-left: 250px; padding: 70px; margin-top: 50px;">
     <h1> Users with Processed Claims </h1>
 
+    
+
+
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Transaction Number</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Claim Filed</th>
@@ -20,6 +24,7 @@
         <tbody>
             <% @claims.each do |claim| %>
                 <tr>
+                    <td><%= claim.transaction_number %></td>
                     <td><%= claim.user.name %></td>
                     <td><%= claim.user.email %></td>
                     <td><%= claim.created_at.strftime("%B %d, %Y") %></td>
